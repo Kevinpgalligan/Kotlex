@@ -2,9 +2,16 @@
 A simple regex implementation in Kotlin, created for educational
 purposes.
 
+It works in a few phases:
+1. Tokenize the regex string.
+2. Parse the tokens into a syntax tree
+3. From the syntax tree, build a Nondeterministic Finite Automaton (using
+Thompson's Construction) that can be used to match strings.
+
 ## Usage Examples
-Currently supported parts of regex: "*", "()", ".", "|". There is a wrapper
-around this that allows true/false text-matching.
+Currently supports  the following parts of regex: "*", "()", ".", "|".
+There is a wrapper around this that allows true/false text-matching. It's
+pretty limited because the matches are all-or-nothing.
 ```
 > val compiledRegex = compileRegex("h*(ello)* world|(here (be|are) dragons)")
 > compiledRegex.matches("here be dragons")
