@@ -1,15 +1,14 @@
 ## About
-A simple regex implementation in Kotlin, created for educational
-purposes.
+A simple regex implementation in Kotlin.
 
-It works in a few phases:
-1. Tokenize the regex string.
-2. Parse the tokens into a syntax tree
-3. From the syntax tree, build a Nondeterministic Finite Automaton (using
+It works in a few phases (all pretty standard):
+1. Tokenizes the regex string.
+2. Parses the tokens into a syntax tree
+3. From the syntax tree, builds a Nondeterministic Finite Automaton (using
 Thompson's Construction) that can be used to match strings.
 
 ## Usage Examples
-Currently supports  the following parts of regex: "*", "()", ".", "|".
+Currently supports the following parts of regex: `*`, `()`, `.`, `|`.
 There is a wrapper around this that allows true/false text-matching. It's
 pretty limited because the matches are all-or-nothing.
 ```
