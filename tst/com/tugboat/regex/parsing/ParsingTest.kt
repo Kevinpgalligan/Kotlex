@@ -6,9 +6,7 @@ import org.junit.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 
-class ParserTest {
-
-    private val parser = Parser()
+class ParsingTest {
 
     @Test
     fun testParseEmptyExpression() {
@@ -198,12 +196,12 @@ class ParserTest {
     private fun testParse(expectedExpression: Regexp, tokens: List<Token>) {
         assertEquals(
             expectedExpression,
-            parser.parse(tokens))
+            parse(tokens))
     }
 
     private fun testFailedParse(tokens: List<Token>) {
-        assertFailsWith(Parser.RegexParsingException::class) {
-            parser.parse(tokens)
+        assertFailsWith(RegexParsingException::class) {
+            parse(tokens)
         }
     }
 }

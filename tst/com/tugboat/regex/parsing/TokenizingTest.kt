@@ -3,13 +3,11 @@ package com.tugboat.regex.parsing
 import org.junit.Test
 import kotlin.test.assertEquals
 
-class TokenizerTest {
-
-    private val tokenizer = Tokenizer()
+class TokenizingTest {
 
     @Test
     fun testTokenizeEmptyString() {
-        assertEquals(emptyList(), tokenizer.tokenize(""))
+        assertEquals(emptyList(), tokenize(""))
     }
 
     @Test
@@ -22,7 +20,7 @@ class TokenizerTest {
                 Token.RightRoundBracket,
                 Token.Star,
                 Token.RawCharacter('e')),
-            tokenizer.tokenize("ah()*e"))
+            tokenize("ah()*e"))
     }
 
     @Test
@@ -33,7 +31,7 @@ class TokenizerTest {
                 Token.LeftRoundBracket,
                 Token.RawCharacter('\\'),
                 Token.RawCharacter('d')),
-            tokenizer.tokenize("\\(\\d"))
+            tokenize("\\(\\d"))
     }
 
     @Test
@@ -43,7 +41,6 @@ class TokenizerTest {
                 Token.LeftRoundBracket,
                 Token.LeftRoundBracket,
                 Token.LeftRoundBracket),
-            tokenizer.tokenize("((("))
-        println(tokenizer.tokenize("a()|.*"))
+            tokenize("((("))
     }
 }

@@ -30,13 +30,10 @@ private val charToSpecialToken: Map<Char, Token> = specialTokens.associateBy { i
 /**
  * Takes a string and converts it into a list of Regex-specific tokens. Is thread-safe.
  */
-class Tokenizer {
+fun tokenize(string: String): List<Token> {
+    return string.map(::toToken)
+}
 
-    fun tokenize(string: String): List<Token> {
-        return string.map(this::toToken)
-    }
-
-    private fun toToken(char: Char): Token {
-        return charToSpecialToken[char] ?: Token.RawCharacter(char)
-    }
+private fun toToken(char: Char): Token {
+    return charToSpecialToken[char] ?: Token.RawCharacter(char)
 }
