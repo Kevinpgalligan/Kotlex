@@ -5,6 +5,8 @@ sealed class Token(val type: TokenType, val raw: Char) {
     object LeftRoundBracket: Token(TokenType.LEFT_ROUND_BRACKET, '(')
     object RightRoundBracket: Token(TokenType.RIGHT_ROUND_BRACKET, ')')
     object Star: Token(TokenType.STAR, '*')
+    object Plus: Token(TokenType.PLUS, '+')
+    object QuestionMark: Token(TokenType.QUESTION_MARK, '?')
     object Or: Token(TokenType.OR, '|')
     object Dot: Token(TokenType.DOT, '.')
 }
@@ -14,6 +16,8 @@ enum class TokenType {
     LEFT_ROUND_BRACKET,
     RIGHT_ROUND_BRACKET,
     STAR,
+    PLUS,
+    QUESTION_MARK,
     OR,
     DOT
 }
@@ -22,6 +26,8 @@ private val specialTokens = listOf(
     Token.LeftRoundBracket,
     Token.RightRoundBracket,
     Token.Star,
+    Token.Plus,
+    Token.QuestionMark,
     Token.Or,
     Token.Dot)
 
