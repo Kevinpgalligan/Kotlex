@@ -74,13 +74,10 @@ class RegexFAConstructor(private val stateFactory: StateFactory) {
     }
 
     private fun withOneOrMoreTimes(expression: Regexp.OneOrMoreTimes, previousState: State, builder: NFABuilder): State {
-        val firstStateOfSubexpression = nextState()
-        builder.withEpsilonTransition(previousState, firstStateOfSubexpression)
-
-        val lastStateOfSubexpression = withExpression(expression.subexpression, firstStateOfSubexpression, builder)
+        val lastStateOfSubexpression = withExpression(expression.subexpression, previousState, builder)
         val lastState = nextState()
         builder.withEpsilonTransition(lastStateOfSubexpression, lastState)
-        builder.withEpsilonTransition(lastStateOfSubexpression, firstStateOfSubexpression)
+        builder.withEpsilonTransition(lastStateOfSubexpression, previousState)
         return lastState
     }
 

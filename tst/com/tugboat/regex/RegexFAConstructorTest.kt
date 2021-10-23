@@ -92,11 +92,10 @@ class RegexFAConstructorTest {
     fun testConstructOneOrMoreTimes() {
         testConstruct(
             mapOf(
-                secondState to setOf(Pair(symbol, thirdState))),
+                firstState to setOf(Pair(symbol, secondState))),
             mapOf(
-                firstState to setOf(secondState),
-                thirdState to setOf(secondState, fourthState),
-                fourthState to setOf(State(5, true))),
+                secondState to setOf(firstState, thirdState),
+                thirdState to setOf(State(4, true))),
             Regexp.OneOrMoreTimes(
                 Regexp.CharMatcher(symbol)))
     }
