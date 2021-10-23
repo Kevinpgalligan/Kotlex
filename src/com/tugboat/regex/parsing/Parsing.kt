@@ -125,6 +125,7 @@ private class StatefulParser(tokens: List<Token>) {
         return when (type) {
             TokenType.STAR -> Regexp.ZeroOrMoreTimes(expressionToModify)
             TokenType.PLUS -> Regexp.OneOrMoreTimes(expressionToModify)
+            TokenType.QUESTION_MARK -> Regexp.ZeroOrOneTime(expressionToModify)
             else -> {
                 rewind()
                 expressionToModify
