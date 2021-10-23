@@ -11,5 +11,6 @@ sealed class Regexp {
     data class Group(val subexpression: Regexp) : Regexp()
     data class CharMatcher(val symbol: Symbol) : Regexp()
     data class ZeroOrMoreTimes(val subexpression: Regexp) : Regexp()
+    data class OneOrMoreTimes(val subexpression: Regexp) : Regexp()
 }
 
