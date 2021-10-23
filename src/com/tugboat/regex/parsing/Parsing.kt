@@ -70,6 +70,16 @@ private class StatefulParser(tokens: List<Token>) {
         return matchTypes.any { it == next.type }
     }
 
+    private fun nextType(): TokenType? {
+        if (!hasNext()) {
+            return null
+        }
+
+        val type = getNext().type
+        rewind()
+        return type
+    }
+
     private fun getNext(): Token {
         return tokensIt.next()
     }
@@ -106,11 +116,20 @@ private class StatefulParser(tokens: List<Token>) {
     }
 
     private fun modifier(expressionToModify: Regexp): Regexp {
-        if (nextMatches(TokenType.STAR)) {
-            skip()
-            return Regexp.ZeroOrMoreTimes(expressionToModify)
+        if (!hasNext()) {
+            return expressionToModify
         }
-        return expressionToModify
+
+        val type = nextType()
+        skip()
+        return when (type) {
+            TokenType.STAR -> Regexp.ZeroOrMoreTimes(expressionToModify)
+            TokenType.PLUS -> Regexp.OneOrMoreTimes(expressionToModify)
+            else -> {
+                rewind()
+                expressionToModify
+            }
+        }
     }
 
     private fun group(): Regexp {

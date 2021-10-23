@@ -79,6 +79,17 @@ class RegexIntegrationTest {
     }
 
     @Test
+    fun testMatchesPlus() {
+        testMatches(
+            "hello+",
+            listOf(
+                "hello",
+                "helloo",
+                "helloooooooo"),
+            listOf("hell"))
+    }
+
+    @Test
     fun testMatchesComplexExpressionWithGroups() {
         testMatches(
             "h*(ello)* world|(here (be|are) dragons)",

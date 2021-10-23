@@ -88,6 +88,18 @@ class RegexFAConstructorTest {
                 Regexp.CharMatcher(symbol)))
     }
 
+    @Test
+    fun testConstructOneOrMoreTimes() {
+        testConstruct(
+            mapOf(
+                firstState to setOf(Pair(symbol, secondState))),
+            mapOf(
+                secondState to setOf(firstState, thirdState),
+                thirdState to setOf(State(4, true))),
+            Regexp.OneOrMoreTimes(
+                Regexp.CharMatcher(symbol)))
+    }
+
     private fun testConstruct(
             expectedTransitions: Map<State, Set<Pair<Symbol, State>>>,
             expectedEpsilonTransitions: Map<State, Set<State>>,
