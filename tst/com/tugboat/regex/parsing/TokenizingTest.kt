@@ -27,9 +27,9 @@ class TokenizingTest {
     fun testTokenizeEscapeCharactersTreatedAsNormalCharacters() {
         assertEquals(
             listOf(
-                Token.RawCharacter('\\'),
+                Token.Backslash,
                 Token.LeftRoundBracket,
-                Token.RawCharacter('\\'),
+                Token.Backslash,
                 Token.RawCharacter('d')),
             tokenize("\\(\\d"))
     }
