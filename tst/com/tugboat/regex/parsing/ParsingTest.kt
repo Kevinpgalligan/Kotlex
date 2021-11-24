@@ -149,6 +149,35 @@ class ParsingTest {
     }
 
     @Test
+    fun testParseEscapedCharacter() {
+        testParse(
+            Regexp.Concatenation(
+                Regexp.CharMatcher(Symbol.RawCharacter('(')),
+                Regexp.CharMatcher(Symbol.RawCharacter('|')),
+                Regexp.CharMatcher(Symbol.RawCharacter('\\'))),
+            listOf(
+                Token.Backslash,
+                Token.LeftRoundBracket,
+                Token.Backslash,
+                Token.Or,
+                Token.Backslash,
+                Token.Backslash))
+    }
+
+    @Test
+    fun testParseCharacterClass() {
+        testParse(
+            Regexp.Concatenation(
+                Regexp.CharMatcher(Symbol.NoneOf("0123456789")),
+                Regexp.CharMatcher(Symbol.AnyOf("0123456789abcdefABCDEF"))),
+            listOf(
+                Token.Backslash,
+                Token.RawCharacter('D'),
+                Token.Backslash,
+                Token.RawCharacter('x')))
+    }
+
+    @Test
     fun testParseOrWithNothingOnEitherSide() {
         testFailedParse(listOf(Token.Or))
     }
@@ -191,6 +220,16 @@ class ParsingTest {
     @Test
     fun testParseUnopenedGroup() {
         testFailedParse(listOf(Token.RightRoundBracket))
+    }
+
+    @Test
+    fun testParseStrayBackslash() {
+        testFailedParse(listOf(Token.Backslash))
+    }
+
+    @Test
+    fun testParseBadCharacterAfterBackslash() {
+        testFailedParse(listOf(Token.Backslash, Token.RawCharacter('a')))
     }
 
     private fun testParse(expectedExpression: Regexp, tokens: List<Token>) {

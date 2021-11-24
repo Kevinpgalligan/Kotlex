@@ -80,7 +80,7 @@ private class StatefulParser(tokens: List<Token>) {
 
     private fun concatenation(): Regexp {
         val subexpressions: MutableList<Regexp> = mutableListOf()
-        while (nextMatches(TokenType.LEFT_ROUND_BRACKET, TokenType.DOT, TokenType.CHARACTER)) {
+        while (nextMatches(TokenType.LEFT_ROUND_BRACKET, TokenType.DOT, TokenType.CHARACTER, TokenType.BACKSLASH)) {
             subexpressions.add(unit())
         }
         if (subexpressions.isEmpty()) {
@@ -101,6 +101,7 @@ private class StatefulParser(tokens: List<Token>) {
             TokenType.CHARACTER -> Regexp.CharMatcher(Symbol.RawCharacter(next.raw))
             TokenType.DOT -> Regexp.CharMatcher(Symbol.Dot)
             TokenType.LEFT_ROUND_BRACKET -> group()
+            TokenType.BACKSLASH -> backslashedCharacter()
             else -> throw RegexParsingException("Failed to parse $next!")
         }
     }
@@ -121,4 +122,42 @@ private class StatefulParser(tokens: List<Token>) {
         skip()
         return Regexp.Group(subexpression)
     }
+
+    private fun backslashedCharacter(): Regexp {
+        if (!hasNext()) {
+            throw RegexParsingException("No character after a backslash!")
+        }
+
+        val next = getNext()
+
+        return when {
+            next in specialTokens -> Regexp.CharMatcher(Symbol.RawCharacter(next.raw))
+            CharClasses.isSingleCharClass(next.raw) -> Regexp.CharMatcher(CharClasses.getSingleCharClass(next.raw)!!)
+            else -> throw RegexParsingException("Invalid character after a backslash: \\${next.raw}")
+        }
+    }
+}
+
+/**
+ * This is just for separating the code for character classes from the main parser
+ */
+private object CharClasses {
+    private val singleCharClasses: Map<Char, Symbol> = mapOf(
+        's' to Symbol.AnyOf(" \t\r\n\u000B\u000C"),
+        'S' to Symbol.NoneOf(" \t\r\n\u000B\u000C"),
+        'd' to Symbol.AnyOf("0123456789"),
+        'D' to Symbol.NoneOf("0123456789"),
+        'w' to Symbol.AnyOf(('a'..'z') + ('A'..'Z') + ('0'..'9') + arrayOf('_')),
+        'W' to Symbol.NoneOf(('a'..'z') + ('A'..'Z') + ('0'..'9') + arrayOf('_')),
+        'x' to Symbol.AnyOf(('a'..'f') + ('A'..'F') + ('0'..'9')),
+        'O' to Symbol.AnyOf("01234567"),
+        'n' to Symbol.RawCharacter('\n'),
+        'r' to Symbol.RawCharacter('\r'),
+        't' to Symbol.RawCharacter('\t'),
+        'v' to Symbol.RawCharacter('\u000B'),
+        'f' to Symbol.RawCharacter('\u000C')
+    )
+
+    fun isSingleCharClass(c: Char) = c in singleCharClasses
+    fun getSingleCharClass(c: Char) = singleCharClasses[c]
 }

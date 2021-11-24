@@ -7,6 +7,7 @@ sealed class Token(val type: TokenType, val raw: Char) {
     object Star: Token(TokenType.STAR, '*')
     object Or: Token(TokenType.OR, '|')
     object Dot: Token(TokenType.DOT, '.')
+    object Backslash: Token(TokenType.BACKSLASH, '\\')
 }
 
 enum class TokenType {
@@ -15,15 +16,17 @@ enum class TokenType {
     RIGHT_ROUND_BRACKET,
     STAR,
     OR,
-    DOT
+    DOT,
+    BACKSLASH,
 }
 
-private val specialTokens = listOf(
+val specialTokens = listOf(
     Token.LeftRoundBracket,
     Token.RightRoundBracket,
     Token.Star,
     Token.Or,
-    Token.Dot)
+    Token.Dot,
+    Token.Backslash)
 
 private val charToSpecialToken: Map<Char, Token> = specialTokens.associateBy { it.raw }
 
