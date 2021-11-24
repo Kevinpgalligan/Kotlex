@@ -20,7 +20,7 @@ enum class TokenType {
     BACKSLASH,
 }
 
-private val specialTokens = listOf(
+val specialTokens = listOf(
     Token.LeftRoundBracket,
     Token.RightRoundBracket,
     Token.Star,
