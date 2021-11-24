@@ -21,6 +21,7 @@ abstract class Symbol {
         public constructor(string: String): this(string.toList())
 
         override fun matches(char: Char) = characters.binarySearch(char) >= 0
+        override fun equals(other: Any?) = other is AnyOf && other.characters == this.characters
     }
 
     class NoneOf(unsortedCharacters: Iterable<Char>): Symbol() {
@@ -29,5 +30,6 @@ abstract class Symbol {
         public constructor(string: String): this(string.toList())
 
         override fun matches(char: Char) = characters.binarySearch(char) < 0
+        override fun equals(other: Any?) = other is NoneOf && other.characters == this.characters
     }
 }
