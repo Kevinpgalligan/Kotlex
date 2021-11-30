@@ -9,7 +9,7 @@ sealed class Token(val type: TokenType, val raw: Char) {
     object Dot: Token(TokenType.DOT, '.')
     object Backslash: Token(TokenType.BACKSLASH, '\\')
     object LeftSquareBracket: Token(TokenType.LEFT_SQUARE_BRACKET, '[')
-    object RightSquareBracket: Token(TokenType.RIGHT_SQUARE_BRACKET, '[')
+    object RightSquareBracket: Token(TokenType.RIGHT_SQUARE_BRACKET, ']')
 }
 
 enum class TokenType {

@@ -107,12 +107,12 @@ class RegexIntegrationTest {
     @Test
     fun testMatchesCharacterRange() {
         testMatches(
-            "[asdf]+",
+            "[asdf][asdf]*",
             listOf(
                 "asdf",
                 "a",
                 "s",
-                "df",
+                "dfff",
                 "fdsa"),
             listOf(
                 "",

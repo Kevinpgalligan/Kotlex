@@ -131,9 +131,13 @@ private class StatefulParser(tokens: List<Token>) {
     private fun characterRangeDefinition(): List<Char> {
         val characters = mutableListOf<Char>()
 
-        while (!nextMatches(TokenType.RIGHT_SQUARE_BRACKET)) {
+        while (hasNext() && !nextMatches(TokenType.RIGHT_SQUARE_BRACKET)) {
             characters.add(getNext().raw)
         }
+
+        if (!nextMatches(TokenType.RIGHT_SQUARE_BRACKET))
+            throw RegexParsingException("Unclosed character range")
+        skip()
 
         return characters
     }
