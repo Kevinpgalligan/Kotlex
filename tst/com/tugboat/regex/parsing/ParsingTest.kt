@@ -190,6 +190,19 @@ class ParsingTest {
     }
 
     @Test
+    fun testParseInvertedCharacterRange() {
+        testParse(
+            Regexp.CharMatcher(Symbol.NoneOf("abc")),
+            listOf(
+                Token.LeftSquareBracket,
+                Token.RawCharacter('^'),
+                Token.RawCharacter('a'),
+                Token.RawCharacter('b'),
+                Token.RawCharacter('c'),
+                Token.RightSquareBracket))
+    }
+
+    @Test
     fun testParseOrWithNothingOnEitherSide() {
         testFailedParse(listOf(Token.Or))
     }

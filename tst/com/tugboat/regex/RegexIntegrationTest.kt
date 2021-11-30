@@ -107,17 +107,20 @@ class RegexIntegrationTest {
     @Test
     fun testMatchesCharacterRange() {
         testMatches(
-            "[asdf][asdf]*",
+            "[asdf][asdf]* [^asdf]*",
             listOf(
-                "asdf",
-                "a",
-                "s",
-                "dfff",
-                "fdsa"),
+                "asdf qwer",
+                "a ",
+                "s ",
+                "dfff ",
+                "fdsa qw"),
             listOf(
                 "",
-                "g",
-                "asxf"))
+                " ",
+                "g ",
+                "asxf ",
+                "asdf asdf",
+                "asdf xd"))
     }
 
     private fun testMatches(pattern: String, expectedMatches: List<String>, expectedNonMatches: List<String>) {

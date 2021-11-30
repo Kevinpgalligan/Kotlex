@@ -70,6 +70,15 @@ private class StatefulParser(tokens: List<Token>) {
         return matchTypes.any { it == next.type }
     }
 
+    private fun nextMatchesRaw(match: Char): Boolean {
+        if (!hasNext())
+            return false
+
+            val next = getNext()
+            rewind()
+            return next.raw == match
+    }
+
     private fun getNext(): Token {
         return tokensIt.next()
     }
@@ -125,11 +134,14 @@ private class StatefulParser(tokens: List<Token>) {
     }
 
     private fun characterRange(): Regexp {
-        return Regexp.CharMatcher(Symbol.AnyOf(characterRangeDefinition()))
+        return Regexp.CharMatcher(characterRangeDefinition())
     }
 
-    private fun characterRangeDefinition(): List<Char> {
+    private fun characterRangeDefinition(): Symbol {
         val characters = mutableListOf<Char>()
+
+        val inverted = nextMatchesRaw('^')
+        if (inverted) skip()
 
         while (hasNext() && !nextMatches(TokenType.RIGHT_SQUARE_BRACKET)) {
             characters.add(getNext().raw)
@@ -139,7 +151,10 @@ private class StatefulParser(tokens: List<Token>) {
             throw RegexParsingException("Unclosed character range")
         skip()
 
-        return characters
+        return if (!inverted)
+            Symbol.AnyOf(characters)
+        else
+            Symbol.NoneOf(characters)
     }
 
     private fun backslashedCharacter(): Regexp {

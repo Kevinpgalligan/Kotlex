@@ -43,4 +43,14 @@ class TokenizingTest {
                 Token.LeftRoundBracket),
             tokenize("((("))
     }
+
+    @Test
+    fun testTokenizeRangeInvertionAsRawCharacter() {
+        // This is to ensure correctness of other tests
+        assertEquals(
+            listOf(
+                Token.LeftSquareBracket,
+                Token.RawCharacter('^')),
+            tokenize("[^"))
+    }
 }
