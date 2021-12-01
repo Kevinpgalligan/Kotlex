@@ -203,6 +203,21 @@ class ParsingTest {
     }
 
     @Test
+    fun testParseEscapedCharInCharacterRange() {
+        testParse(
+            Regexp.CharMatcher(Symbol.AnyOf("^]w")),
+            listOf(
+                Token.LeftSquareBracket,
+                Token.Backslash,
+                Token.RawCharacter('^'),
+                Token.Backslash,
+                Token.RightSquareBracket,
+                Token.Backslash,
+                Token.RawCharacter('w'),
+                Token.RightSquareBracket))
+    }
+
+    @Test
     fun testParseOrWithNothingOnEitherSide() {
         testFailedParse(listOf(Token.Or))
     }
@@ -260,6 +275,11 @@ class ParsingTest {
     @Test
     fun testParseUnclosedCharacterRange() {
         testFailedParse(listOf(Token.LeftSquareBracket))
+    }
+
+    @Test
+    fun testParseStrayBackslashInCharacterRange() {
+        testFailedParse(listOf(Token.LeftSquareBracket, Token.Backslash))
     }
 
     private fun testParse(expectedExpression: Regexp, tokens: List<Token>) {

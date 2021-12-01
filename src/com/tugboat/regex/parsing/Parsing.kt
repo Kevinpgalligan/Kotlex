@@ -83,6 +83,13 @@ private class StatefulParser(tokens: List<Token>) {
         return tokensIt.next()
     }
 
+    private fun nextOrThrow(msg: String): Token {
+        if (!hasNext())
+            throw RegexParsingException(msg)
+
+        return getNext()
+    }
+
     private fun rewind() {
         tokensIt.previous()
     }
@@ -144,7 +151,11 @@ private class StatefulParser(tokens: List<Token>) {
         if (inverted) skip()
 
         while (hasNext() && !nextMatches(TokenType.RIGHT_SQUARE_BRACKET)) {
-            characters.add(getNext().raw)
+            val next = getNext()
+            when (next.type) {
+                TokenType.BACKSLASH -> characters.add(nextOrThrow("No character after a backslash").raw)
+                else -> characters.add(next.raw)
+            }
         }
 
         if (!nextMatches(TokenType.RIGHT_SQUARE_BRACKET))
