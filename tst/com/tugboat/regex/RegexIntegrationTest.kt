@@ -123,6 +123,15 @@ class RegexIntegrationTest {
                 "asdf xd"))
     }
 
+    @Test
+    fun testMatchesInvertedCharacterRangeWithRange() {
+        testMatches(
+            "[^a-cx-z1]",
+            "AZdw:\\-^".map(Character::toString),
+            "abcxyz1".map(Character::toString)
+        )
+    }
+
     private fun testMatches(pattern: String, expectedMatches: List<String>, expectedNonMatches: List<String>) {
         val compiled = compileRegex(pattern)
         expectedMatches.forEach { testMatch(compiled, it, true) }

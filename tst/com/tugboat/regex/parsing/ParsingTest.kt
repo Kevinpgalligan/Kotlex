@@ -205,16 +205,26 @@ class ParsingTest {
     @Test
     fun testParseEscapedCharInCharacterRange() {
         testParse(
-            Regexp.CharMatcher(Symbol.AnyOf("^]w")),
+            Regexp.CharMatcher(Symbol.AnyOf("^]")),
             listOf(
                 Token.LeftSquareBracket,
                 Token.Backslash,
                 Token.RawCharacter('^'),
                 Token.Backslash,
                 Token.RightSquareBracket,
-                Token.Backslash,
-                Token.RawCharacter('w'),
                 Token.RightSquareBracket))
+    }
+
+    @Test
+    fun testParseRangeInCharacterRange() {
+        for (range in listOf("a0-9b", "ab0-9", "b0-9a", "0-9ab")) {
+            testParse(
+                Regexp.CharMatcher(Symbol.AnyOf("ab0123456789")),
+                listOf(
+                    Token.LeftSquareBracket,
+                    *rawCharacters(range),
+                    Token.RightSquareBracket))
+        }
     }
 
     @Test
@@ -280,6 +290,36 @@ class ParsingTest {
     @Test
     fun testParseStrayBackslashInCharacterRange() {
         testFailedParse(listOf(Token.LeftSquareBracket, Token.Backslash))
+    }
+
+    @Test
+    fun testParseBadCharacterAfterBackslashInCharacterRange() {
+        testFailedParse(listOf(Token.LeftSquareBracket, Token.Backslash, Token.RawCharacter('d'), Token.RightSquareBracket))
+    }
+
+    @Test
+    fun testParseTwoHyphensInCharacterRange() {
+        testFailedParse(listOf(Token.LeftSquareBracket, Token.RawCharacter('-'), Token.RawCharacter('-'), Token.RightSquareBracket))
+    }
+
+    @Test
+    fun testParseStrayHyphenInCharacterRange() {
+        testFailedParse(listOf(Token.LeftSquareBracket, Token.RawCharacter('-'), Token.RightSquareBracket))
+    }
+
+    @Test
+    fun testParseInvertedRangeInCharacterRange() {
+        testFailedParse(listOf(Token.LeftSquareBracket, *rawCharacters("z-a"), Token.RightSquareBracket))
+    }
+
+    @Test
+    fun testParseIncompleteRangeInCharacterRange() {
+        testFailedParse(listOf(Token.LeftSquareBracket, *rawCharacters("a-"), Token.RightSquareBracket))
+        testFailedParse(listOf(Token.LeftSquareBracket, *rawCharacters("-z"), Token.RightSquareBracket))
+    }
+
+    private fun rawCharacters(str: String): Array<Token.RawCharacter> {
+        return str.map { Token.RawCharacter(it) }.toTypedArray()
     }
 
     private fun testParse(expectedExpression: Regexp, tokens: List<Token>) {

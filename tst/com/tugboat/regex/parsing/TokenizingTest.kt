@@ -50,7 +50,8 @@ class TokenizingTest {
         assertEquals(
             listOf(
                 Token.LeftSquareBracket,
-                Token.RawCharacter('^')),
-            tokenize("[^"))
+                Token.RawCharacter('^'),
+                Token.RawCharacter('-')),
+            tokenize("[^-"))
     }
 }
