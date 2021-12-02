@@ -141,19 +141,28 @@ private class StatefulParser(tokens: List<Token>) {
     }
 
     private fun characterRange(): Regexp {
-        return Regexp.CharMatcher(characterRangeDefinition())
+        val inverted = nextMatchesRaw('^')
+        if (inverted) skip()
+
+        val symbol = if (inverted)
+            Symbol.LogicalNot(characterRangeDefinition())
+        else
+            characterRangeDefinition()
+
+        return Regexp.CharMatcher(symbol)
     }
 
     private fun characterRangeDefinition(): Symbol {
         val characters = mutableListOf<Char>()
 
-        val inverted = nextMatchesRaw('^')
-        if (inverted) skip()
-
         while (hasNext() && !nextMatches(TokenType.RIGHT_SQUARE_BRACKET)) {
             val next = getNext()
-            when (next.type) {
-                TokenType.BACKSLASH -> characters.add(nextOrThrow("No character after a backslash").raw)
+            when {
+                next.type == TokenType.BACKSLASH -> characters.add(nextOrThrow("No character after a backslash").raw)
+                nextMatchesRaw('-') -> {
+                    skip()
+                    characters += next.raw .. nextOrThrow("No character after a hyphen in a character range!").raw
+                }
                 else -> characters.add(next.raw)
             }
         }
@@ -162,10 +171,7 @@ private class StatefulParser(tokens: List<Token>) {
             throw RegexParsingException("Unclosed character range")
         skip()
 
-        return if (!inverted)
-            Symbol.AnyOf(characters)
-        else
-            Symbol.NoneOf(characters)
+        return Symbol.AnyOf(characters)
     }
 
     private fun backslashedCharacter(): Regexp {
