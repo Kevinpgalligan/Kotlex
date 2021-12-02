@@ -14,4 +14,22 @@ abstract class Symbol {
     object Dot: Symbol() {
         override fun matches(char: Char): Boolean = true
     }
+
+    class AnyOf(unsortedCharacters: Iterable<Char>): Symbol() {
+        val characters = unsortedCharacters.sorted()
+
+        public constructor(string: String): this(string.toList())
+
+        override fun matches(char: Char) = characters.binarySearch(char) >= 0
+        override fun equals(other: Any?) = other is AnyOf && other.characters == this.characters
+    }
+
+    class NoneOf(unsortedCharacters: Iterable<Char>): Symbol() {
+        val characters = unsortedCharacters.sorted()
+
+        public constructor(string: String): this(string.toList())
+
+        override fun matches(char: Char) = characters.binarySearch(char) < 0
+        override fun equals(other: Any?) = other is NoneOf && other.characters == this.characters
+    }
 }

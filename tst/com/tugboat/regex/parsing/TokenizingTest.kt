@@ -27,9 +27,9 @@ class TokenizingTest {
     fun testTokenizeEscapeCharactersTreatedAsNormalCharacters() {
         assertEquals(
             listOf(
-                Token.RawCharacter('\\'),
+                Token.Backslash,
                 Token.LeftRoundBracket,
-                Token.RawCharacter('\\'),
+                Token.Backslash,
                 Token.RawCharacter('d')),
             tokenize("\\(\\d"))
     }
@@ -42,5 +42,15 @@ class TokenizingTest {
                 Token.LeftRoundBracket,
                 Token.LeftRoundBracket),
             tokenize("((("))
+    }
+
+    @Test
+    fun testTokenizeRangeInvertionAsRawCharacter() {
+        // This is to ensure correctness of other tests
+        assertEquals(
+            listOf(
+                Token.LeftSquareBracket,
+                Token.RawCharacter('^')),
+            tokenize("[^"))
     }
 }
