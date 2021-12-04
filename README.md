@@ -23,16 +23,28 @@ Here's the grammar:
 
 ```
 REGEXP                  -> OR | epsilon
+
 OR                      -> CONCATENATION OR_OPTIONAL
 CONCATENATION           -> EXPRESSION | EXPRESSION CONCATENATION
 OR_OPTIONAL             -> "|" CONCATENATION OR_OPTIONAL | epsilon
+
 UNIT                    -> UNMODIFIED_UNIT MODIFIER
 UNMODIFIED_UNIT         -> GROUP | CHAR_MATCHER
 MODIFIER                -> "*" | epsilon
 GROUP                   -> "(" REGEXP ")"
-CHAR_MATCHER            -> DOT | NON_SPECIAL_CHARACTER
-NON_SPECIAL_CHARACTER   -> "a" | "b" | ...
-DOT                     -> "."
+
+CHAR_MATCHER            -> "." | NON_SPECIAL_CHARACTER | CHARACTER_CLASS | CHARACTER_RANGE
+NON_SPECIAL_CHARACTER   -> "a" | "b" | ... | "\" SPECIAL_CHARACTER
+SPECIAL_CHARACTER       -> "." | "(" | ")" | "." | "\" | "|"
+
+CHARACTER_CLASS         -> "\" CHARACTER_CLASS_NAME
+CHARACTER_CLASS_NAME    -> "s" | "d" | "w" | "S" | "D" | "W" | ...
+
+CHARACTER_RANGE         -> "[" "^"? CHARACTER_RANGE_DEFINITION+ "]"
+CHARACTER_RANGE_DEFINITION -> RANGE_NON_SPECIAL_CHARACTER
+						    | RANGE_NON_SPECIAL_CHARACTER "-" RANGE_NON_SPECIAL_CHARACTER
+RANGE_NON_SPECIAL_CHARACTER -> "a" | "b" | ... | "\" RANGE_SPECIAL_CHARACTER
+RANGE_SPECIAL_CHARACTER -> "^" | "]" | "-" | "\"
 ```
 
 Notes on the grammar:
