@@ -124,7 +124,7 @@ class RegexIntegrationTest {
     }
 
     @Test
-    fun testMatchesInvertedCharacterRangeWithRange() {
+    fun testMatchesInvertedCharacterRangeWithComprehension() {
         testMatches(
             "[^a-cx-z1]",
             "AZdw:\\-^".map(Character::toString),

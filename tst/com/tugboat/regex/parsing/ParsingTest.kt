@@ -216,7 +216,7 @@ class ParsingTest {
     }
 
     @Test
-    fun testParseRangeInCharacterRange() {
+    fun testParseComprehensionInCharacterRange() {
         for (range in listOf("a0-9b", "ab0-9", "b0-9a", "0-9ab")) {
             testParse(
                 Regexp.CharMatcher(Symbol.AnyOf("ab0123456789")),
@@ -308,12 +308,12 @@ class ParsingTest {
     }
 
     @Test
-    fun testParseInvertedRangeInCharacterRange() {
+    fun testParseInvertedComprehensionInCharacterRange() {
         testFailedParse(listOf(Token.LeftSquareBracket, *rawCharacters("z-a"), Token.RightSquareBracket))
     }
 
     @Test
-    fun testParseIncompleteRangeInCharacterRange() {
+    fun testParseIncompleteComprehensionInCharacterRange() {
         testFailedParse(listOf(Token.LeftSquareBracket, *rawCharacters("a-"), Token.RightSquareBracket))
         testFailedParse(listOf(Token.LeftSquareBracket, *rawCharacters("-z"), Token.RightSquareBracket))
     }

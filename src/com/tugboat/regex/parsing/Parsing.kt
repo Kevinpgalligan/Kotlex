@@ -158,12 +158,12 @@ private class StatefulParser(tokens: List<Token>) {
         while (hasNext() && !nextMatches(TokenType.RIGHT_SQUARE_BRACKET)) {
             val next = nonSpecialCharacter("-^]\\".toList()) ?: throw RegexParsingException("Unexpected special character in a character range")
 
-            if (nextMatchesRaw('-')) {  // range
+            if (nextMatchesRaw('-')) {  // comprehension
                 skip()
                 val end = nonSpecialCharacter("-^]\\".toList()) ?: throw RegexParsingException("Unexpected special character after a hyphen in a character range")
 
                 if (next > end)
-                    throw RegexParsingException("Bad character range (first character has larger ASCII value than the second one)")
+                    throw RegexParsingException("Bad comprehension in a character range (first character has larger ASCII value than the second one)")
 
                 characters += next .. end
             } else {
